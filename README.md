@@ -1,7 +1,5 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/V0iccz-y)
-
 # Project 5
 
 ## Product Vision
 
-Your product vision here.
+**FOR** college students overwhelmed by packed schedules of classes, assignments, and exams **WHO** want to stay organized and coordinate with peers to make the most of their study time **THE** StudyNest app is an academic task and schedule manager **THAT** lets students make personalized academic schedules, organize tasks by course, and find common study sessions to form study groups **UNLIKE** generic task managers or calendar apps **OUR PRODUCT** is designed specifically for student life, with course based task tracking, a built-in class calendar, and smart suggestions for solo or group study sessions based on your availability and your friends'
