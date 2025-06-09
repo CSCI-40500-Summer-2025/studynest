@@ -1,11 +1,23 @@
 import React from "react";
-import { useState } from "react";
 
-const Layout = () => {
+const Layout = ({ children }) => {
   return (
-    <div>
-      <h1>Welcome to StudyNest</h1>
-      <p>Making your academic dreams come true?</p>
+    <div className="min-h-screen flex flex-col">
+      <header className="border-b">
+        <nav className="px-4 py-2">
+          <h1 className="text-xl">StudyNest</h1>
+        </nav>
+      </header>
+
+      <main className="flex-grow px-4 py-6">
+        {children}
+      </main>
+
+      <footer className="border-t text-sm text-gray-500">
+        <div className="px-4 py-2 text-center">
+          © 2025 StudyNest
+        </div>
+      </footer>
     </div>
   );
 };
