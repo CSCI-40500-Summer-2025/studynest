@@ -50,4 +50,4 @@
    - Study sessions (green)
 
 ### Deployment Link
-[https://team5-studynest.netlify.app/]
+https://team5-studynest.netlify.app/
