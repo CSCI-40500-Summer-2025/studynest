@@ -48,3 +48,6 @@
    - Classes (blue)
    - Tasks (yellow)
    - Study sessions (green)
+
+### Deployment Link
+[https://team5-studynest.netlify.app/]
