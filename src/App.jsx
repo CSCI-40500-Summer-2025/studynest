@@ -1,15 +1,29 @@
+import { useState } from 'react'
 import { useStudyNest } from './hooks/useStudyNest'
 import { formatWeekRange, formatTimeForDisplay, formatDueDate, getWeekDates } from './utils/dateUtils'
 import Schedule from './components/Schedule'
 import CreateTaskModal from './components/CreateTaskModal'
 import CreateClassModal from './components/CreateClassModal'
 import CreateSessionModal from './components/CreateSessionModal'
+import VirtualStudyRoom from './components/VirtualStudyRoom'
+import LMSIntegration from './components/LMSIntegration'
+import ScheduleUploader from './components/ScheduleUploader'
+import NotificationCenter from './components/NotificationCenter'
+import AttendanceTracking from './components/AttendanceTracking'
 
 const tabs = [
   { id: 'schedule', label: 'Schedule' },
   { id: 'tasks', label: 'Tasks' },
   { id: 'classes', label: 'Classes' },
-  { id: 'groups', label: 'Study Groups' }
+  { id: 'groups', label: 'Study Groups' },
+  { id: 'features', label: 'Features' }
+]
+
+const featureButtons = [
+  { id: 'virtual-room', label: '👩‍💻 Virtual Study Room', description: 'Real-time collaboration' },
+  { id: 'lms-integration', label: '📚 LMS Integration', description: 'Sync with your institution' },
+  { id: 'schedule-uploader', label: '📆 Automated Group Scheduler', description: 'Automatically coordinate group study times' },
+  { id: 'notifications', label: '🔔 Notifications', description: 'Smart reminders & alerts' }
 ]
 
 function App() {
@@ -41,6 +55,30 @@ function App() {
     handleCreateClass,
     navigateWeek
   } = useStudyNest()
+
+  const [showVirtualRoom, setShowVirtualRoom] = useState(false)
+  const [showLMSIntegration, setShowLMSIntegration] = useState(false)
+  const [showScheduleUploader, setShowScheduleUploader] = useState(false)
+  const [showNotificationCenter, setShowNotificationCenter] = useState(false)
+  const [selectedSession, setSelectedSession] = useState(null)
+
+  const handleFeatureClick = (featureId) => {
+    switch (featureId) {
+      case 'virtual-room':
+        setSelectedSession({ name: 'CS 405 Study Group', day: 'Tue', time: '16:00-18:00' })
+        setShowVirtualRoom(true)
+        break
+      case 'lms-integration':
+        setShowLMSIntegration(true)
+        break
+      case 'schedule-uploader':
+        setShowScheduleUploader(true)
+        break
+      case 'notifications':
+        setShowNotificationCenter(true)
+        break
+    }
+  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -147,6 +185,7 @@ function App() {
                 Create Session
               </button>
             </div>
+
             <div className="mt-6 space-y-4">
               {exampleSessions.map((session, index) => (
                 <div key={index} className="bg-white p-4 rounded shadow">
@@ -157,20 +196,67 @@ function App() {
                         {session.day}, {formatTimeForDisplay(session.time.split('-')[0])} - {formatTimeForDisplay(session.time.split('-')[1])}
                       </p>
                     </div>
-                    <button
-                      onClick={() => handleJoinGroup(session.name, session.time, session.day)}
-                      disabled={joinedGroups.some(group => group.name === session.name)}
-                      className={`px-4 py-2 rounded ${
-                        joinedGroups.some(group => group.name === session.name)
-                          ? 'bg-gray-300 cursor-not-allowed'
-                          : 'bg-blue-500 text-white hover:bg-blue-600'
-                      }`}
-                    >
-                      {joinedGroups.some(group => group.name === session.name) ? 'Joined' : 'Join'}
-                    </button>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleJoinGroup(session.name, session.time, session.day)}
+                        disabled={joinedGroups.some(group => group.name === session.name)}
+                        className={`px-4 py-2 rounded ${
+                          joinedGroups.some(group => group.name === session.name)
+                            ? 'bg-gray-300 cursor-not-allowed'
+                            : 'bg-blue-500 text-white hover:bg-blue-600'
+                        }`}
+                      >
+                        {joinedGroups.some(group => group.name === session.name) ? 'Joined' : 'Join'}
+                      </button>
+                      {joinedGroups.some(group => group.name === session.name) && (
+                        <button
+                          onClick={() => {
+                            setSelectedSession(session)
+                            setShowVirtualRoom(true)
+                          }}
+                          className="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm"
+                        >
+                          Join Room
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )
+      case 'features':
+        return (
+          <div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold mb-2">Study Tools</h2>
+              <p className="text-gray-600">Prototype features for enhanced study experience</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {featureButtons.map(feature => (
+                <button
+                  key={feature.id}
+                  onClick={() => handleFeatureClick(feature.id)}
+                  className="bg-white p-4 rounded border border-gray-200 text-left hover:bg-gray-50"
+                >
+                  <div className="font-medium text-gray-900">{feature.label}</div>
+                  <div className="text-sm text-gray-600 mt-1">{feature.description}</div>
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-8">
+              <AttendanceTracking />
+            </div>
+
+            <div className="mt-8 p-4 bg-gray-50 rounded border">
+              <h3 className="font-semibold mb-2">Prototype Features</h3>
+              <p className="text-sm text-gray-600">
+                These are demonstration features showing how StudyNest could integrate advanced study tools. 
+                Click any feature to see the prototype interface.
+              </p>
             </div>
           </div>
         )
@@ -222,7 +308,9 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="flex-1 overflow-auto p-6">{renderContent()}</div>
+        <div className="flex-1 overflow-auto p-6">
+          {renderContent()}
+        </div>
       </div>
       {showCreateModal && (
         <CreateSessionModal
@@ -259,6 +347,32 @@ function App() {
         } text-white px-6 py-3 rounded shadow-lg`}>
           {notification.message}
         </div>
+      )}
+
+      {/* New Feature Modals */}
+      {showVirtualRoom && selectedSession && (
+        <VirtualStudyRoom
+          session={selectedSession}
+          onClose={() => setShowVirtualRoom(false)}
+        />
+      )}
+
+      {showLMSIntegration && (
+        <LMSIntegration
+          onClose={() => setShowLMSIntegration(false)}
+        />
+      )}
+
+      {showScheduleUploader && (
+        <ScheduleUploader
+          onClose={() => setShowScheduleUploader(false)}
+        />
+      )}
+
+      {showNotificationCenter && (
+        <NotificationCenter
+          onClose={() => setShowNotificationCenter(false)}
+        />
       )}
     </div>
   )
